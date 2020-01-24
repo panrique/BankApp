@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "942515362500",
+    "firebase_url": "https://bankapp-master.firebaseio.com",
+    "project_id": "bankapp-master",
+    "storage_bucket": "bankapp-master.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:942515362500:android:6b3864afa3422e3c750791",
+        "android_client_info": {
+          "package_name": "com.example.mikebanks.bankscorpfinancial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "942515362500-7via32moh7kni0gaclishr7svig8a7cm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mikebanks.bankscorpfinancial",
+            "certificate_hash": "bcb31d880cd1b9dc4d7e10abc219ce37be23f2a7"
+          }
+        },
+        {
+          "client_id": "942515362500-kndvk14netqf3fnsg4pfcpcscc7s7v4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy1GXmnx6Mz_zOZdPN_oomvckd6aZZdxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "942515362500-kndvk14netqf3fnsg4pfcpcscc7s7v4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
