@@ -31,6 +31,7 @@ public class ApplicationDB {
     private static final String PROFILE_ID = "_ProfileID";
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
+    private static final String EMAIL = "email";
     private static final String COUNTRY = "country";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -38,9 +39,10 @@ public class ApplicationDB {
     private static final int PROFILE_ID_COLUMN = 0;
     private static final int FIRST_NAME_COLUMN = 1;
     private static final int LAST_NAME_COLUMN = 2;
-    private static final int COUNTRY_COLUMN = 3;
-    private static final int USERNAME_COLUMN = 4;
-    private static final int PASSWORD_COLUMN = 5;
+    private static final int EMAIL_COLUMN = 3;
+    private static final int COUNTRY_COLUMN = 4;
+    private static final int USERNAME_COLUMN = 5;
+    private static final int PASSWORD_COLUMN = 6;
     //------------------------------------------------------------------- PROFILE TABLE ----------------------- \\
 
     //------------------------------------------------------------------- PAYEE TABLE ----------------------- \\
@@ -90,6 +92,7 @@ public class ApplicationDB {
                     PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     FIRST_NAME + " TEXT, " +
                     LAST_NAME + " TEXT, " +
+                    EMAIL + " TEXT, " +
                     COUNTRY + " TEXT, " +
                     USERNAME + " TEXT, " +
                     PASSWORD + " TEXT)";
@@ -131,8 +134,14 @@ public class ApplicationDB {
         openHelper = new DBHelper(context, DB_NAME, DB_VERSION);
     }
 
-    //TODO: Remove a profile?
-    //TODO: Not needed unless I add implementation for modifying profile information such as name, password, username, etc.
+    public void clearDB() {
+        database = openHelper.getWritableDatabase();
+        //database.delete(PROFILES_TABLE, null, null);
+        //database.execSQL("DROP TABLE IF EXISTS " + PROFILES_TABLE);
+        database.execSQL(CREATE_PROFILES_TABLE);
+        database.close();
+    }
+
     public void overwriteProfile(Profile profile) {
 
         database = openHelper.getWritableDatabase();
@@ -141,6 +150,7 @@ public class ApplicationDB {
         cv.put(PROFILE_ID,profile.getDbId());
         cv.put(FIRST_NAME,profile.getFirstName());
         cv.put(LAST_NAME,profile.getLastName());
+        cv.put(EMAIL,profile.getEmail());
         cv.put(COUNTRY, profile.getCountry());
         cv.put(USERNAME,profile.getUsername());
         cv.put(PASSWORD,profile.getPassword());
@@ -155,6 +165,7 @@ public class ApplicationDB {
         ContentValues cv = new ContentValues();
         cv.put(FIRST_NAME, profile.getFirstName());
         cv.put(LAST_NAME, profile.getLastName());
+        cv.put(EMAIL,profile.getEmail());
         cv.put(COUNTRY, profile.getCountry());
         cv.put(USERNAME, profile.getUsername());
         cv.put(PASSWORD, profile.getPassword());
@@ -268,6 +279,7 @@ public class ApplicationDB {
             long id = cursor.getLong(PROFILE_ID_COLUMN);
             String firstName = cursor.getString(FIRST_NAME_COLUMN);
             String lastName = cursor.getString(LAST_NAME_COLUMN);
+            String email = cursor.getString(EMAIL_COLUMN);
             String country = cursor.getString(COUNTRY_COLUMN);
             String username = cursor.getString(USERNAME_COLUMN);
             String password = cursor.getString(PASSWORD_COLUMN);
@@ -275,7 +287,7 @@ public class ApplicationDB {
             //ArrayList<Account> accounts = new ArrayList<>();
             //ArrayList<Payee> payees = new ArrayList<>();
 
-            profiles.add(new Profile(firstName, lastName, country, username, password, id));
+            profiles.add(new Profile(firstName, lastName, email, country, username, password, id));
         }
     }
 

@@ -14,6 +14,7 @@
     <string name="cancel">Cancel</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
+    <string name="email">Email Address</string>
     <string name="country">Country</string>
     <string name="password_confirm">Confirm Password</string>
     <string name="remember">Remember Credentials</string>

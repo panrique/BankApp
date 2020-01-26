@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BankApp-master.iml" filepath="$PROJECT_DIR$/BankApp-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/BankApp-master-app.iml" filepath="$PROJECT_DIR$/app/BankApp-master-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/BankApp-master-lib.iml" filepath="$PROJECT_DIR$/lib/BankApp-master-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Desktop-BankApp-master.iml" filepath="$PROJECT_DIR$/Desktop-BankApp-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
     </modules>

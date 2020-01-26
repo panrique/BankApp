@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +15,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.example.mikebanks.bankscorpfinancial.Model.Account;
 import com.example.mikebanks.bankscorpfinancial.Model.Payee;
 import com.example.mikebanks.bankscorpfinancial.Model.Profile;
 import com.example.mikebanks.bankscorpfinancial.Model.db.ApplicationDB;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -226,6 +228,24 @@ public class PaymentFragment extends Fragment {
                 prefsEditor.putString("LastProfileUsed", json).apply();
 
                 Toast.makeText(getActivity(), "Payment of $" + String.format(Locale.getDefault(), "%.2f", paymentAmount) + " successfully made", Toast.LENGTH_SHORT).show();
+
+                //email to sender
+                final String address = userProfile.getEmail();
+                final String body = "Your payment of $" + String.format(Locale.getDefault(), "%.2f", paymentAmount) + " was successfully made.";
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            GMailSender sender = new GMailSender("tiagoa9999@gmail.com",
+                                    "Tiiagoa9999!");
+                            sender.sendMail("BankApp Payment", body,
+                                    "tiagoa9999@gmail.com", address);
+                        } catch (Exception e) {
+                            Log.e("SendMail", e.getMessage(), e);
+                        }
+                    }
+
+                }).start();
                 edtPaymentAmount.getText().clear();
             }
         } else {

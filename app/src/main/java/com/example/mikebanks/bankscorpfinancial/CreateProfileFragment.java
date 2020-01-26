@@ -18,6 +18,7 @@ public class CreateProfileFragment extends Fragment {
 
     private EditText edtFirstName;
     private EditText edtLastName;
+    private EditText edtEmail;
     private EditText edtCountry;
     private EditText edtUsername;
     private EditText edtPassword;
@@ -41,6 +42,7 @@ public class CreateProfileFragment extends Fragment {
 
         edtFirstName = rootView.findViewById(R.id.edt_first_name);
         edtLastName = rootView.findViewById(R.id.edt_last_name);
+        edtEmail = rootView.findViewById(R.id.edt_email);
         edtCountry = rootView.findViewById(R.id.edt_country);
         edtUsername = rootView.findViewById(R.id.edt_username);
         edtPassword = rootView.findViewById(R.id.edt_password);
@@ -64,6 +66,7 @@ public class CreateProfileFragment extends Fragment {
     private void createProfile() {
 
         ApplicationDB applicationDb = new ApplicationDB( getActivity().getApplicationContext());
+        //applicationDb.clearDB();
         ArrayList<Profile> profiles = applicationDb.getAllProfiles();
         boolean usernameTaken = false;
 
@@ -73,8 +76,8 @@ public class CreateProfileFragment extends Fragment {
             }
         }
 
-        if (edtFirstName.getText().toString().equals("") || edtLastName.getText().toString().equals("") || edtCountry.getText().toString().equals("") ||
-                edtUsername.getText().toString().equals("") || edtPassword.getText().toString().equals("") || edtPasswordConfirm.getText().toString().equals("")) {
+        if (edtFirstName.getText().toString().equals("") || edtLastName.getText().toString().equals("") || edtEmail.getText().toString().equals("") || edtCountry.getText().toString().equals("") 
+			|| edtUsername.getText().toString().equals("") || edtPassword.getText().toString().equals("") || edtPasswordConfirm.getText().toString().equals("")) {
             Toast.makeText(getActivity(), R.string.fields_blank, Toast.LENGTH_SHORT).show();
         }
 
@@ -85,11 +88,10 @@ public class CreateProfileFragment extends Fragment {
             Toast.makeText(getActivity(), "A User has already taken that username", Toast.LENGTH_SHORT).show();
         }
         else {
-            Profile userProfile = new Profile(edtFirstName.getText().toString(), edtLastName.getText().toString(), edtCountry.getText().toString(),
-                    edtUsername.getText().toString(), edtPassword.getText().toString());
+            Profile userProfile = new Profile(edtFirstName.getText().toString(), edtLastName.getText().toString(), edtEmail.getText().toString(), 
+												edtCountry.getText().toString(), edtUsername.getText().toString(), edtPassword.getText().toString());
 
             applicationDb.saveNewProfile(userProfile);
-
             Bundle bundle = new Bundle();
             bundle.putString("Username", userProfile.getUsername());
             bundle.putString("Password", userProfile.getPassword());

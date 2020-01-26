@@ -9,6 +9,7 @@ public class Profile {
 
     private String firstName;
     private String lastName;
+    private String email;
     private String country;
     private String username;
     private String password;
@@ -16,9 +17,10 @@ public class Profile {
     private ArrayList<Payee> payees;
     private long dbId;
 
-    public Profile (String firstName, String lastName, String country, String username, String password) {
+    public Profile (String firstName, String lastName, String email, String country, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+		this.email = email;
         this.country = country;
         this.username = username;
         this.password = password;
@@ -26,8 +28,8 @@ public class Profile {
         payees = new ArrayList<>();
     }
 
-    public Profile (String firstName, String lastName, String country, String username, String password, long dbId) {
-        this(firstName, lastName, country, username, password);
+    public Profile (String firstName, String lastName, String email, String country, String username, String password, long dbId) {
+        this(firstName, lastName, email, country, username, password);
         this.dbId = dbId;
     }
 
@@ -39,6 +41,9 @@ public class Profile {
     }
     public String getLastName() {
         return lastName;
+    }
+	public String getEmail() {
+        return email;
     }
     public String getCountry() {
         return country;

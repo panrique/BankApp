@@ -5,18 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,9 +18,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.mikebanks.bankscorpfinancial.Model.Account;
 import com.example.mikebanks.bankscorpfinancial.Model.Profile;
 import com.example.mikebanks.bankscorpfinancial.Model.db.ApplicationDB;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
 import java.util.Locale;
@@ -306,7 +308,23 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                     account.getTransactions().get(account.getTransactions().size()-1));
 
             Toast.makeText(this, "Deposit of $" + String.format(Locale.getDefault(), "%.2f",depositAmount) + " " + "made successfully", Toast.LENGTH_SHORT).show();
+            //email to sender
+            final String address = userProfile.getEmail();
+            final String body = "Your deposit of $" + String.format(Locale.getDefault(), "%.2f", depositAmount) + " was successfully made.";
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        GMailSender sender = new GMailSender("tiagoa9999@gmail.com",
+                                "Tiiagoa9999!");
+                        sender.sendMail("BankApp Payment", body,
+                                "tiagoa9999@gmail.com", address);
+                    } catch (Exception e) {
+                        Log.e("SendMail", e.getMessage(), e);
+                    }
+                }
 
+            }).start();
             accountAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, userProfile.getAccounts());
             accountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spnAccounts.setAdapter(accountAdapter);
@@ -405,6 +423,8 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 startActivity(intent);
                 finish();
                 break;
+			case R.id.button_crash:
+				throw new RuntimeException("Test Crash"); // Force a crash
             default:
                 fragmentClass = DashboardFragment.class;
         }
