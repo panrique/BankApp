@@ -1,7 +1,9 @@
 package com.example.mikebanks.bankscorpfinancial.Model;
 
+
 import java.util.ArrayList;
 import java.util.Locale;
+
 
 /**
  * Class used to create an account for the user
@@ -48,8 +50,14 @@ public class Account {
         return transactions;
     }
 
-    public void addPaymentTransaction (String payee, double amount) {
+    //public void addPaymentTransaction(Profile payee, double amount) {
+    public void addPaymentTransaction(String payee, double amount) {
         accountBalance -= amount;
+        /*
+        double accountAmmountPayee = payee.getAccounts().get(0).accountBalance;
+        accountAmmountPayee += amount;
+        payee.getAccounts().get(0).setAccountBalance(accountAmmountPayee);
+         */
 
         int paymentCount = 0;
 
@@ -60,6 +68,22 @@ public class Account {
         }
 
         Transaction payment = new Transaction("T" + (transactions.size() + 1) + "-P" + (paymentCount+1), payee, amount);
+
+
+        //!!! Will try after.
+        /*String firstName = ref.child("firstName").toString();
+        String lastName= ref.child("lastName").toString();
+        String email=ref.child("email").toString();
+        String country=ref.child("country").toString();
+        String username=ref.child("username").toString();
+        String password=ref.child("password").toString();
+        Profile paid = new Profile(firstName, lastName, email, country, username, password);
+        ArrayList<Account> accountsOfPayee = paid.getAccounts();
+        double payeeBalance = accountsOfPayee.get(0).accountBalance;
+        payeeBalance += amount;
+        accountsOfPayee.get(0).setAccountBalance(payeeBalance);*/
+
+
         transactions.add(payment);
     }
 

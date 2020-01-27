@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "803728330212-kq2vng5lefk7faej4vrulfbkiodjotf7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mikebanks.bankscorpfinancial",
+            "certificate_hash": "8bef9324cd25f958b1a43f538381d0f509a9ccd1"
+          }
+        },
+        {
           "client_id": "803728330212-7da1s92idta2pibjrl76o02shmnef9su.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

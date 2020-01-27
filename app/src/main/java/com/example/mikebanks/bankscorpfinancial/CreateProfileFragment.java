@@ -1,6 +1,8 @@
 package com.example.mikebanks.bankscorpfinancial;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +13,16 @@ import android.widget.Toast;
 
 import com.example.mikebanks.bankscorpfinancial.Model.Profile;
 import com.example.mikebanks.bankscorpfinancial.Model.db.ApplicationDB;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class CreateProfileFragment extends Fragment {
 
@@ -23,6 +33,8 @@ public class CreateProfileFragment extends Fragment {
     private EditText edtUsername;
     private EditText edtPassword;
     private EditText edtPasswordConfirm;
+    Profile userProfile;
+    DatabaseReference ref;
 
     public CreateProfileFragment() {
         // Required empty public constructor
@@ -48,10 +60,54 @@ public class CreateProfileFragment extends Fragment {
         edtPassword = rootView.findViewById(R.id.edt_password);
         edtPasswordConfirm = rootView.findViewById(R.id.edt_password_confirm);
         Button btnCreateAccount = rootView.findViewById(R.id.btn_create_account);
+        userProfile = new Profile();
+        ref = FirebaseDatabase.getInstance().getReference().child("Profile");
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                userProfile.setFirstName(edtFirstName.getText().toString());
+                userProfile.setEmail(edtEmail.getText().toString());
+                userProfile.setCountry(edtCountry.getText().toString());
+                userProfile.setUsername(edtUsername.getText().toString());
+                userProfile.setPassword(edtPassword.getText().toString());
+
+                String regex = "^(.+)@(.+)$";
+                Pattern pattern = Pattern.compile(regex);
+                if(!(pattern.matcher(userProfile.getEmail()).matches())) {
+                    Toast.makeText(CreateProfileFragment.this.getActivity(), "Try email again",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String regex2 =  "((?=.[a-z])(?=.\\d)(?=.[A-Z])(?=.[@#$%!]).{8,40})";
+                if(!(pattern.matcher(userProfile.getPassword()).matches())) {
+                    Toast.makeText(CreateProfileFragment.this.getActivity(), "Try password again; include at least one lowercase and one uppercase, one number, special character and longer than 7",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        if (snapshot.hasChild(userProfile.getEmail())) {
+                            Toast.makeText(CreateProfileFragment.this.getActivity(), "DB Try email again",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+
+                        }
+                        ref.child(userProfile.getEmail()).setValue(userProfile);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+
+                });
+
+
+
                 createProfile();
+
             }
         });
 
@@ -66,9 +122,11 @@ public class CreateProfileFragment extends Fragment {
     private void createProfile() {
 
         ApplicationDB applicationDb = new ApplicationDB( getActivity().getApplicationContext());
-        //applicationDb.clearDB();
+
+
         ArrayList<Profile> profiles = applicationDb.getAllProfiles();
         boolean usernameTaken = false;
+
 
         for (int iProfile = 0; iProfile < profiles.size(); iProfile++) {
             if (edtUsername.getText().toString().equals(profiles.get(iProfile).getUsername())) {
@@ -99,5 +157,7 @@ public class CreateProfileFragment extends Fragment {
             ((LaunchActivity) getActivity()).profileCreated(bundle);
 
         }
+
+
     }
 }

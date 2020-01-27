@@ -7,22 +7,22 @@ package com.example.mikebanks.bankscorpfinancial.Model;
 public class Payee {
 
     private String payeeID;
-    private String payeeName;
+    private String payeeEmail;
     private long dbId;
 
-    public Payee (String payeeID, String payeeName) {
+    public Payee (String payeeID, String payeeEmail) {
         this.payeeID = payeeID;
-        this.payeeName = payeeName;
+        this.payeeEmail = payeeEmail;
     }
 
-    public Payee (String payeeID, String payeeName, long dbId) {
-        this(payeeID, payeeName);
+    public Payee (String payeeID, String payeeEmail, long dbId) {
+        this(payeeID, payeeEmail);
         this.dbId = dbId;
     }
 
 
-    public String getPayeeName() {
-        return payeeName;
+    public String getPayeeEmail() {
+        return payeeEmail;
     }
     public String getPayeeID() { return payeeID; }
 
@@ -30,5 +30,5 @@ public class Payee {
         this.dbId = dbId;
     }
 
-    public String toString() { return (payeeName + " (" + payeeID + ")"); }
+    public String toString() { return (payeeEmail + " (" + payeeID + ")"); }
 }

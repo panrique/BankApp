@@ -17,6 +17,42 @@ public class Profile {
     private ArrayList<Payee> payees;
     private long dbId;
 
+    public Profile() {
+
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAccounts(ArrayList<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    public void setPayees(ArrayList<Payee> payees) {
+        this.payees = payees;
+    }
+
     public Profile (String firstName, String lastName, String email, String country, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -90,9 +126,9 @@ public class Profile {
         receivingAcc.getTransactions().add(new Transaction("T" + (receivingAcc.getTransactions().size() + 1) + "-T" + (receivingAccTransferCount+1), sendingAcc.toTransactionString(), receivingAcc.toTransactionString(), transferAmount));
     }
 
-    public void addPayee(String payeeName) {
+    public void addPayee(String payeeEmail) {
         String payeeID = "P" + (payees.size() + 1);
-        Payee payee = new Payee(payeeID, payeeName);
+        Payee payee = new Payee(payeeID, payeeEmail);
         payees.add(payee);
     }
 

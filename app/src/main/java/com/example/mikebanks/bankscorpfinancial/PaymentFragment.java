@@ -23,6 +23,11 @@ import com.example.mikebanks.bankscorpfinancial.Model.Payee;
 import com.example.mikebanks.bankscorpfinancial.Model.Profile;
 import com.example.mikebanks.bankscorpfinancial.Model.db.ApplicationDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -45,6 +50,9 @@ public class PaymentFragment extends Fragment {
     private EditText edtPayeeName;
     private Button btnCancel;
     private Button btnConfirmAddPayee;
+    DatabaseReference ref;
+
+    Profile P;
 
     private View.OnClickListener addPayeeClickListener = new View.OnClickListener() {
         @Override
@@ -212,8 +220,17 @@ public class PaymentFragment extends Fragment {
 
                 String selectedPayee = userProfile.getPayees().get(selectedPayeeIndex).toString();
 
+                /*ApplicationDB applicationDB = new ApplicationDB(getActivity().getApplicationContext());
+                ArrayList<Profile> profiles = applicationDB.getAllProfiles();
+                if (profiles.size() > 0) {
+                    for (int i = 0; i < profiles.size(); i++) {
+                        if (selectedPayee.equals(profiles.get(i).getEmail())) {
+                            P = profiles.get(i);
+                        }
+                    }
+                }
+                userProfile.getAccounts().get(selectedAccountIndex).addPaymentTransaction(P, paymentAmount);*/
                 userProfile.getAccounts().get(selectedAccountIndex).addPaymentTransaction(selectedPayee, paymentAmount);
-
                 accounts = userProfile.getAccounts();
                 spnSelectAccount.setAdapter(accountAdapter);
                 spnSelectAccount.setSelection(selectedAccountIndex);
@@ -260,42 +277,59 @@ public class PaymentFragment extends Fragment {
     private void addPayee() {
         if (!(edtPayeeName.getText().toString().equals(""))) {
 
-            boolean match = false;
-            for (int i = 0; i < userProfile.getPayees().size(); i++) {
-                if (edtPayeeName.getText().toString().equalsIgnoreCase(userProfile.getPayees().get(i).getPayeeName())) {
-                    match = true;
+            ref = FirebaseDatabase.getInstance().getReference().child("Profile");
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.hasChild(userProfile.getEmail())) {
+                        Toast.makeText(PaymentFragment.this.getActivity(), "User does not exist", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    boolean match = false;
+                    for (int i = 0; i < userProfile.getPayees().size(); i++) {
+                        if (edtPayeeName.getText().toString().equalsIgnoreCase(userProfile.getPayees().get(i).getPayeeEmail())) {
+                            match = true;
+                        }
+                    }
+
+                    if (!match) {
+                        userProfile.addPayee(edtPayeeName.getText().toString());
+
+                        edtPayeeName.setText("");
+
+                        txtNoPayeesMsg.setVisibility(GONE);
+                        spnSelectPayee.setVisibility(VISIBLE);
+                        edtPaymentAmount.setVisibility(VISIBLE);
+                        btnMakePayment.setVisibility(VISIBLE);
+
+                        payees = userProfile.getPayees();
+                        spnSelectPayee.setAdapter(payeeAdapter);
+                        spnSelectPayee.setSelection(userProfile.getPayees().size()-1);
+
+                        ApplicationDB applicationDb = new ApplicationDB(getActivity().getApplicationContext());
+                        applicationDb.saveNewPayee(userProfile, userProfile.getPayees().get(userProfile.getPayees().size()-1));
+
+                        SharedPreferences.Editor prefsEditor = userPreferences.edit();
+                        gson = new Gson();
+                        json = gson.toJson(userProfile);
+                        prefsEditor.putString("LastProfileUsed", json).apply();
+
+                        Toast.makeText(getActivity(), "Payee Added Successfully", Toast.LENGTH_SHORT).show();
+
+                        payeeDialog.dismiss();
+
+                    } else {
+                        Toast.makeText(getActivity(), "A Payee with that name already exists", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            if (!match) {
-                userProfile.addPayee(edtPayeeName.getText().toString());
+                }
+            });
 
-                edtPayeeName.setText("");
 
-                txtNoPayeesMsg.setVisibility(GONE);
-                spnSelectPayee.setVisibility(VISIBLE);
-                edtPaymentAmount.setVisibility(VISIBLE);
-                btnMakePayment.setVisibility(VISIBLE);
-
-                payees = userProfile.getPayees();
-                spnSelectPayee.setAdapter(payeeAdapter);
-                spnSelectPayee.setSelection(userProfile.getPayees().size()-1);
-
-                ApplicationDB applicationDb = new ApplicationDB(getActivity().getApplicationContext());
-                applicationDb.saveNewPayee(userProfile, userProfile.getPayees().get(userProfile.getPayees().size()-1));
-
-                SharedPreferences.Editor prefsEditor = userPreferences.edit();
-                gson = new Gson();
-                json = gson.toJson(userProfile);
-                prefsEditor.putString("LastProfileUsed", json).apply();
-
-                Toast.makeText(getActivity(), "Payee Added Successfully", Toast.LENGTH_SHORT).show();
-
-                payeeDialog.dismiss();
-
-            } else {
-                Toast.makeText(getActivity(), "A Payee with that name already exists", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 

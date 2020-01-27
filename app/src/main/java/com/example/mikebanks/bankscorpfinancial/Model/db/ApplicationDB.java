@@ -185,7 +185,7 @@ public class ApplicationDB {
 
         cv.put(PROFILE_ID, profile.getDbId());
         cv.put(PAYEE_ID, payee.getPayeeID());
-        cv.put(PAYEE_NAME, payee.getPayeeName());
+        cv.put(PAYEE_NAME, payee.getPayeeEmail());
 
         long id = database.insert(PAYEES_TABLE, null, cv);
 
