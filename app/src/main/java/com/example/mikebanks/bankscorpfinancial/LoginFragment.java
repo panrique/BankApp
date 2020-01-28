@@ -14,6 +14,11 @@ import android.widget.Toast;
 
 import com.example.mikebanks.bankscorpfinancial.Model.Profile;
 import com.example.mikebanks.bankscorpfinancial.Model.db.ApplicationDB;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ public class LoginFragment extends Fragment {
     private Bundle bundle;
     private String username;
     private String password;
+    //private String email;
 
     private EditText edtUsername;
     private EditText edtPassword;
@@ -59,8 +65,8 @@ public class LoginFragment extends Fragment {
 
         bundle = this.getArguments();
         if (bundle != null) {
-            username = bundle.getString("Username", "");
-            password = bundle.getString("Password", "");
+            //username = bundle.getString("Email", "");
+            //password = bundle.getString("Password", "");
         }
     }
 
@@ -82,8 +88,8 @@ public class LoginFragment extends Fragment {
         setupViews();
 
         if (bundle != null) {
-            edtUsername.setText(username);
-            edtPassword.setText(password);
+            //edtUsername.setText(username);
+            //edtPassword.setText(password);
             chkRememberCred.setChecked(true);
         }
 
@@ -107,8 +113,8 @@ public class LoginFragment extends Fragment {
             json = userPreferences.getString("LastProfileUsed", "");
             lastProfileUsed = gson.fromJson(json, Profile.class);
 
-            edtUsername.setText(lastProfileUsed.getUsername());
-            edtPassword.setText(lastProfileUsed.getPassword());
+            //edtUsername.setText(lastProfileUsed.getUsername());
+            //edtPassword.setText(lastProfileUsed.getPassword());
 
             //Automatic login for user
             //login();
@@ -117,7 +123,7 @@ public class LoginFragment extends Fragment {
 
     }
 
-    @Override
+    /*@Override
     public void onStop() {
         if (lastProfileUsed != null) {
             if (edtUsername.getText().toString().equals(lastProfileUsed.getUsername()) && edtPassword.getText().toString().equals(lastProfileUsed.getPassword())) {
@@ -128,8 +134,9 @@ public class LoginFragment extends Fragment {
         }
 
         super.onStop();
-    }
+    } */
 
+    /*
     private void validateAccount() {
         ApplicationDB applicationDB = new ApplicationDB(getActivity().getApplicationContext());
         ArrayList<Profile> profiles = applicationDB.getAllProfiles();
@@ -162,6 +169,40 @@ public class LoginFragment extends Fragment {
         }
 
 
+    }
+    */
+
+    private void validateAccount() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Profile");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.hasChild(edtUsername.getText().toString())) {
+                    lastProfileUsed = snapshot.child(edtUsername.getText().toString()).getValue(Profile.class);
+                    String a = lastProfileUsed.getPassword();
+                    String a1 = edtPassword.getText().toString();
+                    boolean aaa = a.equals(a1);
+                    System.out.println("t-tttttttttttttttttttttttttt-------------------------------------------------" + aaa);
+                    if(a.equals(a1)){
+                        userPreferences.edit().putBoolean("rememberMe", chkRememberCred.isChecked()).apply();
+                        //lastProfileUsed = snapshot.child(edtUsername.getText().toString()).getValue(Profile.class);
+                        SharedPreferences.Editor prefsEditor = userPreferences.edit();
+                        gson = new Gson();
+                        json = gson.toJson(lastProfileUsed);
+                        prefsEditor.putString("LastProfileUsed", json).apply();
+                        ((LaunchActivity) getActivity()).login();
+                    } else {
+                        Toast.makeText(getActivity(), "ERROR:  Profile (email, password) is: (" + lastProfileUsed.getEmail() + " , " + lastProfileUsed.getPassword() + "). Inserted: (" + edtUsername.getText() + " , " + edtPassword.getText() + "). ", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "There is no such user", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
