@@ -89,13 +89,13 @@ public class CreateProfileFragment extends Fragment {
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        if (snapshot.hasChild(userProfile.getEmail())) {
+                        if (snapshot.hasChild(userProfile.getUsername())) {
                             Toast.makeText(CreateProfileFragment.this.getActivity(), "DB Try email again",
                                     Toast.LENGTH_SHORT).show();
                             return;
 
                         }
-                        ref.child(userProfile.getEmail()).setValue(userProfile);
+                        ref.child(userProfile.getUsername()).setValue(userProfile);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

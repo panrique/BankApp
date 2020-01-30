@@ -282,13 +282,13 @@ public class PaymentFragment extends Fragment {
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.hasChild(userProfile.getEmail())) {
+                    if (!snapshot.hasChild(userProfile.getUsername())) {
                         Toast.makeText(PaymentFragment.this.getActivity(), "User does not exist", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     boolean match = false;
                     for (int i = 0; i < userProfile.getPayees().size(); i++) {
-                        if (edtPayeeName.getText().toString().equalsIgnoreCase(userProfile.getPayees().get(i).getPayeeEmail())) {
+                        if (edtPayeeName.getText().toString().equalsIgnoreCase(userProfile.getPayees().get(i).getPayeeUsername())) {
                             match = true;
                         }
                     }

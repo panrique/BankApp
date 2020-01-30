@@ -65,7 +65,7 @@ public class LoginFragment extends Fragment {
 
         bundle = this.getArguments();
         if (bundle != null) {
-            //username = bundle.getString("Email", "");
+            //username = bundle.getString("Username", "");
             //password = bundle.getString("Password", "");
         }
     }
@@ -181,8 +181,6 @@ public class LoginFragment extends Fragment {
                     lastProfileUsed = snapshot.child(edtUsername.getText().toString()).getValue(Profile.class);
                     String a = lastProfileUsed.getPassword();
                     String a1 = edtPassword.getText().toString();
-                    boolean aaa = a.equals(a1);
-                    System.out.println("t-tttttttttttttttttttttttttt-------------------------------------------------" + aaa);
                     if(a.equals(a1)){
                         userPreferences.edit().putBoolean("rememberMe", chkRememberCred.isChecked()).apply();
                         //lastProfileUsed = snapshot.child(edtUsername.getText().toString()).getValue(Profile.class);
@@ -192,7 +190,7 @@ public class LoginFragment extends Fragment {
                         prefsEditor.putString("LastProfileUsed", json).apply();
                         ((LaunchActivity) getActivity()).login();
                     } else {
-                        Toast.makeText(getActivity(), "ERROR:  Profile (email, password) is: (" + lastProfileUsed.getEmail() + " , " + lastProfileUsed.getPassword() + "). Inserted: (" + edtUsername.getText() + " , " + edtPassword.getText() + "). ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "ERROR:  Profile (username, password) is: (" + lastProfileUsed.getEmail() + " , " + lastProfileUsed.getPassword() + "). Inserted: (" + edtUsername.getText() + " , " + edtPassword.getText() + "). ", Toast.LENGTH_SHORT).show();
 
                     }
                 } else {
