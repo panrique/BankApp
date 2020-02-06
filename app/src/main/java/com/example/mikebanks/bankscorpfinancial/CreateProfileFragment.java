@@ -72,7 +72,7 @@ public class CreateProfileFragment extends Fragment {
                 userProfile.setUsername(edtUsername.getText().toString());
                 userProfile.setPassword(edtPassword.getText().toString());
 
-                /*String regex = "^(.+)@(.+)$";
+                String regex = "^(.+)@(.+)$";
                 Pattern pattern = Pattern.compile(regex);
                 if(!(pattern.matcher(userProfile.getEmail()).matches())) {
                     Toast.makeText(CreateProfileFragment.this.getActivity(), "Try email again",
@@ -84,7 +84,7 @@ public class CreateProfileFragment extends Fragment {
                     Toast.makeText(CreateProfileFragment.this.getActivity(), "Try password again; include at least one lowercase and one uppercase, one number, special character and longer than 7",
                             Toast.LENGTH_SHORT).show();
                     return;
-                }*/
+                }
 
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
